@@ -1,0 +1,9 @@
+function SearchIcon() {
+    return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.5 18.5L21 21" stroke="black" strokeWidth="2" strokeLinecap="round" className="my-path"></path>
+        <path
+            d="M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+            stroke="black" strokeWidth="2" className="my-path"></path>
+    </svg>;
+}
+export default SearchIcon;
