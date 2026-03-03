@@ -22,7 +22,7 @@ function SelectMenuNavComponent({onHandleShowCartComponent}) {
             </ul>
         </div>
         <button onClick={() => showCartComponent()}
-                className={"font-medium text-black px-15 py-3 bg-amber-400"}>Checkout
+                className={"font-medium text-black px-15 py-3 bg-red-400"}>Checkout
         </button>
     </nav>;
 }
