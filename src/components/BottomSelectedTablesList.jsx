@@ -15,10 +15,13 @@ function SelectedTablesListItem({number, onRemove}) {
     </li>;
 }
 
-function BottomSelectedTablesList({selectedTablesList, handleTableSelect}) {
+function BottomSelectedTablesList({selectedTablesList, handleTableSelect, onHandleNextScreen,visibleStatus}) {
+    function handleNextScreen() {
+        onHandleNextScreen();
+    }
     return (
         <div
-            className={"fixed z-20 bottom-10 w-4/5 h-23 flex flex-row justify-start items-center bg-white py-3 px-8 rounded-2xl shadow-black shadow-xl/30 gap-5"}>
+            className={`fixed z-20 bottom-10 w-4/5 h-23  justify-start items-center bg-white py-3 px-8 rounded-2xl shadow-black shadow-xl/30 gap-5 ${visibleStatus}`}>
             <div className={"flex flex-row items-center gap-5 "}>
                 <ClipboardIcon/>
                 <h3 className={"font-bold text-xl text-black"}>Tables</h3>
@@ -36,6 +39,7 @@ function BottomSelectedTablesList({selectedTablesList, handleTableSelect}) {
                     }
                 </ul>
                 <button
+                    onClick={() => handleNextScreen()}
                     className={`w-max px-15 h-15 flex items-center justify-center text-lg font-bold bg-amber-400`}>Next
                 </button>
             </div>

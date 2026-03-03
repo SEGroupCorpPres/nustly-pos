@@ -10,10 +10,11 @@ function MiddleChair({bgColor}) {
 }
 
 function DinningTable({number, status, chairsCount = 8, selectTable}) {
-   function handleClick() {
-       console.log("clicked")
-       selectTable()
-   }
+    function handleClick() {
+        console.log("clicked")
+        selectTable()
+    }
+
     let tBgColor = () => {
         switch (status) {
             case TableStatus.reserved:
@@ -27,7 +28,8 @@ function DinningTable({number, status, chairsCount = 8, selectTable}) {
         }
     }
     const width = chairsCount === 10 && chairsCount !== 2 ? "w-60" : "w-30";
-    return <div onDoubleClick={handleClick} className={`h-30 ${width} ${tBgColor()} rounded-md flex flex-col items-center justify-center`}><h1
+    return <div onDoubleClick={handleClick}
+                className={`h-30 ${width} ${tBgColor()} rounded-md flex flex-col items-center justify-center`}><h1
         className={"font-bold text-black text-2xl"}>{number}</h1></div>;
 }
 
@@ -54,7 +56,7 @@ function MiddleChairs({chairsCount = 8}) {
 
 function SelectableDinningTable({number, status, chairsCount = 8, selectTable}) {
     return (
-        <div className={"flex flex-col items-center gap-2 "}>
+        <div className={"flex flex-col items-center gap-2 cursor-pointer"}>
             {/*top chairs*/}
             <Chairs chairsCount={chairsCount}/>
             {/*    middle chairs and table*/}

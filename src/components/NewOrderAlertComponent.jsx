@@ -65,7 +65,7 @@ function NewOrderAlertComponent({isShowNewOrderAlert, hideNewOrderAlert}) {
 
     return (
         <div
-            className={`${showNewOrderAlert()} w-full h-screen bg-gray-900/50 absolute z-20 top-0 left-0 flex justify-center items-center`}>
+            className={`${showNewOrderAlert()} w-full h-screen bg-gray-900/50 absolute z-20 top-0 left-0  justify-center items-center`}>
             <form className="flex flex-col items-start justify-start h-auto w-1/4 bg-white p-6 gap-3">
                 <OrderTypeRadioGroup
                     options={[

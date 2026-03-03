@@ -15,17 +15,27 @@ import CashierScreen from "./screens/CashierScreen";
 import DineInScreen from "./screens/DineInScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import TakeAwayScreen from "./screens/TakeAwayScreen";
+import CartComponent from "./components/CartComponent";
 
 function App() {
     const [showNewOrderAlert, setShowNewOrderAlert] = useState(false);
+    const [showCartComponent, setShowCartComponent] = useState(false);
+
+    console.log(`showCartComponent ${showCartComponent} on appjs`);
 
     function handleNewOrderAlert() {
         console.log(`handle ${showNewOrderAlert}`);
         setShowNewOrderAlert(!showNewOrderAlert);
     }
 
+    function handleShowCartComponent() {
+        console.log(`handle ${showCartComponent}`);
+        setShowCartComponent(!showCartComponent);
+    }
+
     return (
-        <div className="flex flex-col items-center justify-start min-h-screen w-screen  bg-gray-100 relative box-border">
+        <div
+            className="flex flex-col items-center justify-start min-h-screen w-screen  bg-gray-100 relative box-border">
             {/* Start Navbar */}
             <AppNavbar handleNewOrderAlert={handleNewOrderAlert}/>
             {/* End Navbar */}
@@ -38,7 +48,8 @@ function App() {
                     <Route path="/orders" element={<OrdersScreen/>}/>
                     <Route path="/customers" element={<CustomersScreen/>}/>
                     <Route path="/cashier" element={<CashierScreen/>}/>
-                    <Route path="/dine-in" element={<DineInScreen/>}/>
+                    <Route path="/dine-in" element={<DineInScreen handleShowCartComponent={handleShowCartComponent}
+                                                                  handleHideCartComponent={handleShowCartComponent}/>}/>
                     <Route path="/take-away" element={<TakeAwayScreen/>}/>
                     <Route path="/delivery" element={<DeliveryScreen/>}/>
                     <Route path="/login" element={<LoginScreen/>}/>
@@ -50,6 +61,8 @@ function App() {
                 {/*    End Revenue Section*/}
             </main>
             <NewOrderAlertComponent isShowNewOrderAlert={showNewOrderAlert} hideNewOrderAlert={handleNewOrderAlert}/>
+            <CartComponent isShowCartComponent={showCartComponent}
+                           onHandleHideCartComponent={handleShowCartComponent}/>
             {/*End HomeScreen Section*/}
         </div>
     );
