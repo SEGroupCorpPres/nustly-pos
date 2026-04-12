@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import {cartList} from "../assets/MockData";
+import { doc, setDoc } from "firebase/firestore";
+import {firebaseCloudFirestoreDB} from "../firebase_config";
 
 function MenuItemComponent({item}) {
     const [itemQty, setItemQty] = useState(1);
@@ -22,14 +24,26 @@ function MenuItemComponent({item}) {
     }
 
     // add item to cart list where current item id !== currentList item id
-    function addToCart() {
+    async  function addToCart () {
         console.log("addToCart")
         console.log("isExist", isExist)
         console.log(cartList)
-        if (!isExist) {
-            console.log(item)
-            cartList.push(item);
-        }
+        // if (!isExist) {
+        //     console.log(item)
+        //     cartList.push(item);
+        // }
+
+       try {
+           await setDoc(doc(firebaseCloudFirestoreDB, "nustly-cart", String(item.id)), {
+               name: item.title,
+               price: item.price,
+               qty: itemQty
+           })
+           console.log("Document successfully written!")
+       }
+       catch (error) {
+           console.error("Error adding document: ", error);
+       }
     }
 
     return <div className={"flex flex-col text-black"}>
@@ -57,7 +71,7 @@ function MenuItemComponent({item}) {
                 </div>
             </div>
             <button
-                onClick={() => addToCart()}
+                onClick={ addToCart}
                 className={"font-medium text-black w-full h-13 bg-amber-400  text-xl"}>Add to Cart
             </button>
         </div>

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {cartList} from "../assets/MockData";
 import DeleteIcon from "./icons/DeleteIcon";
+import {collection, doc, getDocs, updateDoc, deleteDoc} from "firebase/firestore";
+import {firebaseCloudFirestoreDB} from "../firebase_config";
 
 function CartListComponent(props) {
+    const [items, setItems] = useState([]);
     function removeItemFromCart(item) {
         console.log(item);
         let indexRemovableItem = cartList.findIndex(cartItem => cartItem.id === item.id);
@@ -11,13 +14,56 @@ function CartListComponent(props) {
         }
         console.log(cartList);
     }
+
+    useEffect(() => {
+        async function fetchDocs() {
+            try {
+                const querySnapshot = await getDocs(
+                    collection(firebaseCloudFirestoreDB, "nustly-cart")
+                );
+
+                const docs = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                setItems(docs);
+                console.log("firestore docs " + docs[0].name);
+            } catch (error) {
+                console.error("Error getting documents:", error);
+            }
+        }
+
+        fetchDocs().then((r) => {
+            console.log(r);
+        },error => console.log(error));
+    }, []);
+
+    async function updateOneField(docId, newValue) {
+        const docRef = doc(firebaseCloudFirestoreDB, "nustly-cart", docId);
+
+        await updateDoc(docRef, {
+            qty: newValue,
+        });
+    }
+
+    async function deleteItem({itemId}) {
+        try {
+
+        await deleteDoc(doc(firebaseCloudFirestoreDB, "nustly-cart", itemId));
+        console.log("Document successfully deleted!");
+        } catch (error) {
+        console.error("Error removing document: ", error);
+        }
+    }
+
     return <ul className={"flex flex-col gap-3 w-full h-3/6 overflow-y-auto"}>
         {
-            cartList.map((product) => (
+            items.map((product) => (
                 <li className={"flex flex-col w-full justify-start items-start px-5 pe-5 pb-5"}>
                     <div
                         className={"flex flex-row justify-between items-end w-full text-black text-2xl"}>
-                        <p>{product.title}</p>
+                        <p>{product.name}</p>
                         <p className={"text-amber-500"}>${product.price}</p>
                     </div>
                     <hr className={"my-2 w-full text-gray-400"}/>
@@ -34,7 +80,7 @@ function CartListComponent(props) {
                                 className={"font-medium text-black h-full w-12 bg-amber-400"}>+
                             </button>
                         </div>
-                        <div onClick={() => removeItemFromCart(product)}
+                        <div onClick={() => deleteItem({ itemId: product.id})}
                              className={"flex flex-col gap-1 border border-gray-400 rounded-full p-2"}>
                             <DeleteIcon/>
                         </div>
