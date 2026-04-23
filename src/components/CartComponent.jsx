@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {cartList} from "../assets/MockData";
 import DeleteIcon from "./icons/DeleteIcon";
-import {collection, doc, getDocs, updateDoc, deleteDoc} from "firebase/firestore";
+import {collection, doc, getDocs, updateDoc, deleteDoc, onSnapshot} from "firebase/firestore";
 import {firebaseCloudFirestoreDB} from "../firebase_config";
 
 function CartListComponent(props) {
@@ -15,29 +15,28 @@ function CartListComponent(props) {
         console.log(cartList);
     }
 
-    useEffect(() => {
-        async function fetchDocs() {
-            try {
-                const querySnapshot = await getDocs(
-                    collection(firebaseCloudFirestoreDB, "nustly-cart")
-                );
 
+    useEffect(() => {
+        const unsubscribe = onSnapshot(
+            collection(firebaseCloudFirestoreDB, "nustly-cart"),
+            (querySnapshot) => {
                 const docs = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
                 }));
 
                 setItems(docs);
-                console.log("firestore docs " + docs);
-            } catch (error) {
-                console.error("Error getting documents:", error);
+                console.log("firestore docs:", docs);
+            },
+            (error) => {
+                console.error("Error listening to documents:", error);
             }
-        }
+        );
 
-        fetchDocs().then((r) => {
-            console.log(r);
-        },error => console.log(error));
-    }, [items]);
+        return () => {
+            unsubscribe(); // 🔴 MUHIM: cleanup
+        };
+    }, []);
 
     async function updateOneField(docId, newValue) {
         const docRef = doc(firebaseCloudFirestoreDB, "nustly-cart", docId);
@@ -74,7 +73,7 @@ function CartListComponent(props) {
                                 className={"font-medium text-black h-full w-12 bg-amber-400"}>-
                             </button>
                             <p className={"w-12 h-full flex justify-center items-center bg-gray-300"}>
-                                1
+                                { product.qty}
                             </p>
                             <button
                                 className={"font-medium text-black h-full w-12 bg-amber-400"}>+
@@ -91,7 +90,7 @@ function CartListComponent(props) {
     </ul>;
 }
 
-function CartComponent({isShowCartComponent, onHandleHideCartComponent}) {
+function CartComponent({isShowCartComponent, onHandleHideCartComponent, productsLIst}) {
     function showCartComponent() {
         console.log(`showCartComponent ${isShowCartComponent} on cartComponent`);
         return isShowCartComponent ? "flex flex-row" : "hidden"
