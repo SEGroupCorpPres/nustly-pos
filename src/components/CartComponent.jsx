@@ -28,7 +28,7 @@ function CartListComponent(props) {
                 }));
 
                 setItems(docs);
-                console.log("firestore docs " + docs[0].name);
+                console.log("firestore docs " + docs);
             } catch (error) {
                 console.error("Error getting documents:", error);
             }
@@ -37,7 +37,7 @@ function CartListComponent(props) {
         fetchDocs().then((r) => {
             console.log(r);
         },error => console.log(error));
-    }, []);
+    }, [items]);
 
     async function updateOneField(docId, newValue) {
         const docRef = doc(firebaseCloudFirestoreDB, "nustly-cart", docId);
